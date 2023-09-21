@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/Config";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,30 +11,62 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  //   const handleLogin = () => {
+  //     signInWithEmailAndPassword(auth, email, password)
+  //       .then((userCredential) => {
+  //         // Signed in
+  //         // console.log(email, password);
+  //         const user = userCredential.user;
+  //         console.log(user);
+  //         // ...
+  //       })
+  //       .catch((error) => {
+  //         const errorCode = error.code;
+  //         const errorMessage = error.message;
+  //       });
+  // setIsLoading(true);
+  // const validEmail = "user@example.com";
+  // const validPassword = "1Password";
+
+  // console.log(email, password);
+
+  // const trimmedEmail = email.trim();
+  // const trimmedPassword = password.trim();
+
+  // if (trimmedEmail === "" || trimmedPassword === "") {
+  //   toast.error("Fields cannot be empty!");
+  //   setIsLoading(false);
+  //   return;
+  // }
+  // if (trimmedEmail !== validEmail || trimmedPassword !== validPassword) {
+  //   toast.error("Incorrect Credentials");
+  //   setIsLoading(false);
+  //   return;
+  // }
+  // setIsLoading(false);
+  // toast.success("Login Successful");
+  // navigate("/homepage");
+  //   };
   const handleLogin = () => {
     setIsLoading(true);
-    const validEmail = "user@example.com";
-    const validPassword = "1Password";
 
-    console.log(email, password);
-
-    const trimmedEmail = email.trim();
-    const trimmedPassword = password.trim();
-
-    if (trimmedEmail === "" || trimmedPassword === "") {
-      toast.error("Fields cannot be empty!");
-      setIsLoading(false);
-      return;
-    }
-    if (trimmedEmail !== validEmail || trimmedPassword !== validPassword) {
-      toast.error("Incorrect Credentials");
-      setIsLoading(false);
-      return;
-    }
-    setIsLoading(false);
-    toast.success("Login Successful");
-    navigate("/homepage");
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        // Redirect to the home page or perform other actions upon successful login.
+        navigate("/homepage");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // Display an error message to the user.
+        toast.error(errorMessage);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
+
   return (
     <>
       <ToastContainer />

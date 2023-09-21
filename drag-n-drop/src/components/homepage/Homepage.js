@@ -6,6 +6,8 @@ import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase/Config";
 
 const Homepage = () => {
   const [photos, setPhotos] = useState([]);
@@ -59,7 +61,14 @@ const Homepage = () => {
   };
 
   const logoutHandler = () => {
-    navigate('/')
+    signOut(auth)
+      .then(() => {
+        console.log("Logging out");
+        navigate('/')
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   };
 
   return (
